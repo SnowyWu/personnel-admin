@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.employee.mapper.EmployeeAccountMapper">
+
+    <resultMap type="EmployeeAccount" id="EmployeeAccountResult">
+        <result property="id"    column="id"    />
+        <result property="username"    column="username"    />
+        <result property="password"    column="password"    />
+        <result property="isAdmin"    column="is_admin"    />
+        <result property="employeeId"    column="employee_id"    />
+    </resultMap>
+
+    <sql id="selectEmployeeAccountVo">
+        select id, username, password, is_admin, employee_id from tb_employee_account
+    </sql>
+
+    <select id="selectEmployeeAccountList" parameterType="EmployeeAccount" resultMap="EmployeeAccountResult">
+        <include refid="selectEmployeeAccountVo"/>
+        <where>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="isAdmin != null "> and is_admin = #{isAdmin}</if>
+            <if test="employeeId != null "> and employee_id = #{employeeId}</if>
+        </where>
+    </select>
+
+    <select id="selectEmployeeAccountById" parameterType="Long" resultMap="EmployeeAccountResult">
+        <include refid="selectEmployeeAccountVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertEmployeeAccount" parameterType="EmployeeAccount" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_employee_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">username,</if>
+            <if test="password != null and password != ''">password,</if>
+            <if test="isAdmin != null">is_admin,</if>
+            <if test="employeeId != null">employee_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="password != null and password != ''">#{password},</if>
+            <if test="isAdmin != null">#{isAdmin},</if>
+            <if test="employeeId != null">#{employeeId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateEmployeeAccount" parameterType="EmployeeAccount">
+        update tb_employee_account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="isAdmin != null">is_admin = #{isAdmin},</if>
+            <if test="employeeId != null">employee_id = #{employeeId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEmployeeAccountById" parameterType="Long">
+        delete from tb_employee_account where id = #{id}
+    </delete>
+
+    <delete id="deleteEmployeeAccountByIds" parameterType="String">
+        delete from tb_employee_account where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

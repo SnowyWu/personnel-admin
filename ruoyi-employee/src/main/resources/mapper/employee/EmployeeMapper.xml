@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.employee.mapper.EmployeeMapper">
+    
+    <resultMap type="Employee" id="EmployeeResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="sex"    column="sex"    />
+        <result property="phone"    column="phone"    />
+        <result property="entryDate"    column="entryDate"    />
+        <result property="department"    column="department"    />
+        <result property="job"    column="job"    />
+        <result property="salary"    column="salary"    />
+        <result property="idNumber"    column="idNumber"    />
+        <result property="educational"    column="educational"    />
+    </resultMap>
+
+    <sql id="selectEmployeeVo">
+        select id, name, sex, phone, entryDate, department, job, salary, idNumber, educational from tb_employee
+    </sql>
+
+    <select id="selectEmployeeList" parameterType="Employee" resultMap="EmployeeResult">
+        <include refid="selectEmployeeVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="entryDate != null "> and entryDate = #{entryDate}</if>
+            <if test="department != null "> and department = #{department}</if>
+            <if test="job != null  and job != ''"> and job = #{job}</if>
+            <if test="salary != null "> and salary = #{salary}</if>
+            <if test="idNumber != null  and idNumber != ''"> and idNumber = #{idNumber}</if>
+            <if test="educational != null "> and educational = #{educational}</if>
+        </where>
+    </select>
+    
+    <select id="selectEmployeeById" parameterType="Long" resultMap="EmployeeResult">
+        <include refid="selectEmployeeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertEmployee" parameterType="Employee" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_employee
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="sex != null">sex,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="entryDate != null">entryDate,</if>
+            <if test="department != null">department,</if>
+            <if test="job != null and job != ''">job,</if>
+            <if test="salary != null">salary,</if>
+            <if test="idNumber != null and idNumber != ''">idNumber,</if>
+            <if test="educational != null">educational,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="entryDate != null">#{entryDate},</if>
+            <if test="department != null">#{department},</if>
+            <if test="job != null and job != ''">#{job},</if>
+            <if test="salary != null">#{salary},</if>
+            <if test="idNumber != null and idNumber != ''">#{idNumber},</if>
+            <if test="educational != null">#{educational},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEmployee" parameterType="Employee">
+        update tb_employee
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="entryDate != null">entryDate = #{entryDate},</if>
+            <if test="department != null">department = #{department},</if>
+            <if test="job != null and job != ''">job = #{job},</if>
+            <if test="salary != null">salary = #{salary},</if>
+            <if test="idNumber != null and idNumber != ''">idNumber = #{idNumber},</if>
+            <if test="educational != null">educational = #{educational},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEmployeeById" parameterType="Long">
+        delete from tb_employee where id = #{id}
+    </delete>
+
+    <delete id="deleteEmployeeByIds" parameterType="String">
+        delete from tb_employee where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.recruitment.mapper.ResumeInfoMapper">
+    
+    <resultMap type="ResumeInfo" id="ResumeInfoResult">
+        <result property="resumeId"    column="resume_id"    />
+        <result property="applicantName"    column="applicant_name"    />
+        <result property="gender"    column="gender"    />
+        <result property="contactInfo"    column="contact_info"    />
+        <result property="politicalStatus"    column="political_status"    />
+        <result property="nativePlace"    column="native_place"    />
+        <result property="education"    column="education"    />
+        <result property="workExperience"    column="work_experience"    />
+        <result property="skills"    column="skills"    />
+        <result property="jobIntentions"    column="job_intentions"    />
+        <result property="submitDate"    column="submit_date"    />
+    </resultMap>
+
+    <sql id="selectResumeInfoVo">
+        select resume_id, applicant_name, gender, contact_info, political_status, native_place, education, work_experience, skills, job_intentions, submit_date from tb_resume_info
+    </sql>
+
+    <select id="selectResumeInfoList" parameterType="ResumeInfo" resultMap="ResumeInfoResult">
+        <include refid="selectResumeInfoVo"/>
+        <where>  
+            <if test="applicantName != null  and applicantName != ''"> and applicant_name like concat('%', #{applicantName}, '%')</if>
+            <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
+            <if test="contactInfo != null  and contactInfo != ''"> and contact_info = #{contactInfo}</if>
+            <if test="politicalStatus != null  and politicalStatus != ''"> and political_status = #{politicalStatus}</if>
+            <if test="nativePlace != null  and nativePlace != ''"> and native_place = #{nativePlace}</if>
+            <if test="education != null  and education != ''"> and education = #{education}</if>
+            <if test="workExperience != null  and workExperience != ''"> and work_experience = #{workExperience}</if>
+            <if test="skills != null  and skills != ''"> and skills = #{skills}</if>
+            <if test="jobIntentions != null  and jobIntentions != ''"> and job_intentions = #{jobIntentions}</if>
+            <if test="submitDate != null "> and submit_date = #{submitDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectResumeInfoByResumeId" parameterType="Long" resultMap="ResumeInfoResult">
+        <include refid="selectResumeInfoVo"/>
+        where resume_id = #{resumeId}
+    </select>
+        
+    <insert id="insertResumeInfo" parameterType="ResumeInfo">
+        insert into tb_resume_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="resumeId != null">resume_id,</if>
+            <if test="applicantName != null and applicantName != ''">applicant_name,</if>
+            <if test="gender != null">gender,</if>
+            <if test="contactInfo != null">contact_info,</if>
+            <if test="politicalStatus != null">political_status,</if>
+            <if test="nativePlace != null">native_place,</if>
+            <if test="education != null">education,</if>
+            <if test="workExperience != null">work_experience,</if>
+            <if test="skills != null">skills,</if>
+            <if test="jobIntentions != null">job_intentions,</if>
+            <if test="submitDate != null">submit_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="resumeId != null">#{resumeId},</if>
+            <if test="applicantName != null and applicantName != ''">#{applicantName},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="contactInfo != null">#{contactInfo},</if>
+            <if test="politicalStatus != null">#{politicalStatus},</if>
+            <if test="nativePlace != null">#{nativePlace},</if>
+            <if test="education != null">#{education},</if>
+            <if test="workExperience != null">#{workExperience},</if>
+            <if test="skills != null">#{skills},</if>
+            <if test="jobIntentions != null">#{jobIntentions},</if>
+            <if test="submitDate != null">#{submitDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateResumeInfo" parameterType="ResumeInfo">
+        update tb_resume_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applicantName != null and applicantName != ''">applicant_name = #{applicantName},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="contactInfo != null">contact_info = #{contactInfo},</if>
+            <if test="politicalStatus != null">political_status = #{politicalStatus},</if>
+            <if test="nativePlace != null">native_place = #{nativePlace},</if>
+            <if test="education != null">education = #{education},</if>
+            <if test="workExperience != null">work_experience = #{workExperience},</if>
+            <if test="skills != null">skills = #{skills},</if>
+            <if test="jobIntentions != null">job_intentions = #{jobIntentions},</if>
+            <if test="submitDate != null">submit_date = #{submitDate},</if>
+        </trim>
+        where resume_id = #{resumeId}
+    </update>
+
+    <delete id="deleteResumeInfoByResumeId" parameterType="Long">
+        delete from tb_resume_info where resume_id = #{resumeId}
+    </delete>
+
+    <delete id="deleteResumeInfoByResumeIds" parameterType="String">
+        delete from tb_resume_info where resume_id in 
+        <foreach item="resumeId" collection="array" open="(" separator="," close=")">
+            #{resumeId}
+        </foreach>
+    </delete>
+</mapper>
