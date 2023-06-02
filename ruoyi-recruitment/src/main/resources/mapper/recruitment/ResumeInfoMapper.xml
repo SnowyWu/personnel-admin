@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.recruitment.mapper.ResumeInfoMapper">
-    
+
     <resultMap type="ResumeInfo" id="ResumeInfoResult">
         <result property="resumeId"    column="resume_id"    />
         <result property="applicantName"    column="applicant_name"    />
@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectResumeInfoList" parameterType="ResumeInfo" resultMap="ResumeInfoResult">
         <include refid="selectResumeInfoVo"/>
-        <where>  
+        <where>
             <if test="applicantName != null  and applicantName != ''"> and applicant_name like concat('%', #{applicantName}, '%')</if>
             <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
             <if test="contactInfo != null  and contactInfo != ''"> and contact_info = #{contactInfo}</if>
@@ -37,13 +37,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="submitDate != null "> and submit_date = #{submitDate}</if>
         </where>
     </select>
-    
+
     <select id="selectResumeInfoByResumeId" parameterType="Long" resultMap="ResumeInfoResult">
         <include refid="selectResumeInfoVo"/>
         where resume_id = #{resumeId}
     </select>
-        
-    <insert id="insertResumeInfo" parameterType="ResumeInfo">
+
+    <insert id="insertResumeInfo" parameterType="ResumeInfo" useGeneratedKeys="true" keyProperty="resumeId">
         insert into tb_resume_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="resumeId != null">resume_id,</if>
@@ -95,7 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteResumeInfoByResumeIds" parameterType="String">
-        delete from tb_resume_info where resume_id in 
+        delete from tb_resume_info where resume_id in
         <foreach item="resumeId" collection="array" open="(" separator="," close=")">
             #{resumeId}
         </foreach>

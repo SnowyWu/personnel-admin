@@ -16,6 +16,38 @@
         select id, username, password, is_admin, employee_id from tb_employee_account
     </sql>
 
+    <sql id="accountAndEmployeeVo">
+        SELECT
+            a.id,
+            a.is_admin ,
+            a.username,
+            a.password,
+            e.name
+        FROM
+            tb_employee as e,
+            tb_employee_account as a
+    </sql>
+    <resultMap type="AccountAndName" id="AccountAndNameResult">
+        <result property="id"    column="id"    />
+        <result property="username"    column="username"    />
+        <result property="password"    column="password"    />
+        <result property="isAdmin"    column="is_admin"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <select id="selectEmployeeAndNameList" parameterType="EmployeeAccount" resultMap="AccountAndNameResult">
+        <include refid="accountAndEmployeeVo"/>
+        <where>
+            <if test="username != null  and username != ''"> and a.username like concat('%', #{username}, '%')</if>
+            <if test="password != null  and password != ''"> and a.password = #{password}</if>
+            <if test="isAdmin != null "> and a.is_admin = #{isAdmin}</if>
+            and a.employee_id = e.id
+        </where>
+    </select>
+
+
+
+
     <select id="selectEmployeeAccountList" parameterType="EmployeeAccount" resultMap="EmployeeAccountResult">
         <include refid="selectEmployeeAccountVo"/>
         <where>
@@ -67,5 +99,8 @@
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
+    </delete>
+    <delete id="deleteEmployeeAccountByEmployeeId" parameterType="long">
+    delete  from tb_employee_account where employee_id = #{id}
     </delete>
 </mapper>

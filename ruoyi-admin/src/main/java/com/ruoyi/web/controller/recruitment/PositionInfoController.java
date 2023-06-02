@@ -1,4 +1,4 @@
-package com.ruoyi.recruitment.controller;
+package com.ruoyi.web.controller.recruitment;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +23,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 职位信息Controller
- * 
+ *
  * @author Snow
  * @date 2023-05-31
  */

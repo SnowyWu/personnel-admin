@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.recruitment.mapper.InterviewEvaluationMapper">
+
+    <resultMap type="InterviewEvaluation" id="InterviewEvaluationResult">
+        <result property="evaluationId" column="evaluation_id"/>
+        <result property="applicantName" column="applicant_name"/>
+        <result property="interviewer"    column="interviewer"    />
+        <result property="interviewDate"    column="interview_date"    />
+        <result property="interviewResult"    column="interview_result"    />
+        <result property="evaluationContent"    column="evaluation_content"    />
+    </resultMap>
+
+    <sql id="selectInterviewEvaluationVo">
+        select evaluation_id, resume_id, interviewer, interview_date, interview_result, evaluation_content from tb_interview_evaluation
+    </sql>
+
+
+    <sql id="InterviewEvaluationAndName">
+        SELECT i.evaluation_id,
+               r.applicant_name,
+               i.evaluation_content,
+               i.interviewer,
+               i.interview_date,
+               i.interview_result
+        FROM tb_resume_info as r,
+             tb_interview_evaluation as i
+    </sql>
+
+    <select id="selectInterviewEvaluationList" parameterType="InterviewEvaluation" resultMap="InterviewEvaluationResult">
+        <include refid="InterviewEvaluationAndName"/>
+        <where>
+            <if test="interviewer != null  and interviewer != ''"> and interviewer = #{interviewer}</if>
+            <if test="interviewDate != null "> and interview_date = #{interviewDate}</if>
+            <if test="interviewResult != null "> and interview_result = #{interviewResult}</if>
+            <if test="evaluationContent != null  and evaluationContent != ''"> and evaluation_content = #{evaluationContent}</if>
+             and i.resume_id = r.resume_id
+        </where>
+    </select>
+
+    <select id="selectInterviewEvaluationByEvaluationId" parameterType="Long" resultMap="InterviewEvaluationResult">
+        <include refid="selectInterviewEvaluationVo"/>
+        where evaluation_id = #{evaluationId}
+    </select>
+
+    <insert id="insertInterviewEvaluation" parameterType="InterviewEvaluation">
+        insert into tb_interview_evaluation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="resumeId != null">resume_id,</if>
+            <if test="evaluationId != null">evaluation_id,</if>
+            <if test="interviewer != null">interviewer,</if>
+            <if test="interviewDate != null">interview_date,</if>
+            <if test="interviewResult != null">interview_result,</if>
+            <if test="evaluationContent != null">evaluation_content,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="resumeId != null">#{resumeId},</if>
+            <if test="evaluationId != null">#{evaluationId},</if>
+            <if test="interviewer != null">#{interviewer},</if>
+            <if test="interviewDate != null">#{interviewDate},</if>
+            <if test="interviewResult != null">#{interviewResult},</if>
+            <if test="evaluationContent != null">#{evaluationContent},</if>
+        </trim>
+    </insert>
+
+    <update id="updateInterviewEvaluation" parameterType="InterviewEvaluation">
+        update tb_interview_evaluation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="interviewer != null">interviewer = #{interviewer},</if>
+            <if test="interviewDate != null">interview_date = #{interviewDate},</if>
+            <if test="interviewResult != null">interview_result = #{interviewResult},</if>
+            <if test="evaluationContent != null">evaluation_content = #{evaluationContent},</if>
+        </trim>
+        where evaluation_id = #{evaluationId}
+    </update>
+
+    <delete id="deleteInterviewEvaluationByEvaluationId" parameterType="Long">
+        delete from tb_interview_evaluation where evaluation_id = #{evaluationId}
+    </delete>
+
+    <delete id="deleteInterviewEvaluationByEvaluationIds" parameterType="String">
+        delete from tb_interview_evaluation where evaluation_id in
+        <foreach item="evaluationId" collection="array" open="(" separator="," close=")">
+            #{evaluationId}
+        </foreach>
+    </delete>
+    <delete id="deleteInterviewEvaluationByResumeId" parameterType="java.lang.Long">
+        delete from tb_interview_evaluation where resume_id = #{resumeId}
+    </delete>
+</mapper>

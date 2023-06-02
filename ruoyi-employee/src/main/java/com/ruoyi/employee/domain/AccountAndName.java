@@ -19,15 +19,7 @@ public class AccountAndName {
     @Excel(name = "是否是管理员，1: 管理员, 2: 普通员工")
     private Integer isAdmin;
 
-    @Override
-    public String toString() {
-        return "AccountAndEmployee{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", isAdmin=" + isAdmin +
-                ", name='" + name + '\'' +
-                '}';
-    }
+
 
     /** 姓名 */
     @Excel(name = "姓名")
@@ -63,5 +55,24 @@ public class AccountAndName {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "AccountAndName{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", isAdmin=" + isAdmin +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
