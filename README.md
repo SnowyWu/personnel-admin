@@ -1,1 +1,1 @@
-人事管理系统
+人事管理系统:<a href="https://snowywu.github.io/">系统说明文档</a>
